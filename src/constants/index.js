@@ -201,7 +201,7 @@ export const projects = [
     name: "3D Portfolio",
     description:
       "I've crafted a dynamic 3D portfolio using Three.js and React Fiber, seamlessly blending creativity with technical proficiency. Fully responsive for an optimal user experience across devices.",
-    link: "https://github.com/adrianhajdin/threads",
+    link: "https://rishi-portfolio-omega.vercel.app/projects",
   },
   {
     iconUrl: captisync,
