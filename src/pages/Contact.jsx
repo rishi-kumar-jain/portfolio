@@ -9,7 +9,7 @@ import Alert from '../component/Alert';
 const Contact = () => {
   const formRef = useRef(null);
   const [form ,setForm] = useState({name : '', email: '', message: ''});
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setLoading] = useState(false);
   const [currentAnimation, setCurrentAnimation] = useState('idle')  
   const {alert, showAlert, hideAlert} = useAlert();
   const handleChange = (e)=> {
@@ -20,56 +20,61 @@ const Contact = () => {
   const handleFocus = ()=>{setCurrentAnimation('walk')};
   const handleBlur = ()=>{setCurrentAnimation('idle')};
 
-  const handleSubmit = (e)=>{
+  const handleSubmit = (e) => {
     e.preventDefault();
-    
-    setIsLoading(true);
-    setCurrentAnimation('hit');
+    setLoading(true);
+    setCurrentAnimation("hit");
 
-    emailjs.send(
-      import.meta.env.VITE_APP_EMAILJS_SERVICE_ID,
-      import.meta.env.VITE_APP_EMAILJS_TEMPLATE_ID,
-      {
-        from_name: form.name,
-        to_name: "Rishi",
-        from_email: form.email,
-        to_email: 'jainrishi932002@gmail.com',
-        message: form.message
+    emailjs
+      .send(
+        import.meta.env.VITE_APP_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_APP_EMAILJS_TEMPLATE_ID,
+        {
+          from_name: form.name,
+          to_name: "RJ",
+          from_email: form.email,
+          to_email: "jainrishi932002@gmail.com",
+          message: form.message,
+        },
+        import.meta.env.VITE_APP_EMAILJS_PUBLIC_KEY
+      )
+      .then(
+        () => {
+          setLoading(false);
+          showAlert({
+            show: true,
+            text: "Thank you for your message 😃",
+            type: "success",
+          });
 
-      },
-      import.meta.env.VITE_APP_EMAILJS_PUBLIC_KEY
+          setTimeout(() => {
+            hideAlert(false);
+            setCurrentAnimation("idle");
+            setForm({
+              name: "",
+              email: "",
+              message: "",
+            });
+          }, [3000]);
+        },
+        (error) => {
+          setLoading(false);
+          console.error(error);
+          setCurrentAnimation("idle");
 
-
-
-      
-    ).then(()=>{
-      setIsLoading(false);
-
-      //Success msg
-      showAlert({ show:true, text: '🔥 Message sent successfully 🔥' , type: 'success' });
-
-
-      setTimeout(()=>{
-        hideAlert();
-        setCurrentAnimation('idle')
-        setForm({name: '', email: '', message: ''});
-      }, [3000]);
-
-
-
-
-
-
-      //hide alert
-      
-    }).catch((e)=>{
-      setIsLoading(false);
-      setCurrentAnimation('idle')
-      console.log(e);
-      showAlert({show: true, text: '💀 Did not get that 💀!', type: 'danger'});
-    })
-
+          showAlert({
+            show: true,
+            text: "I didn't receive your message 😢",
+            type: "danger",
+          });
+        }
+      );
   };
+
+
+
+      
+
 
   return (
     <section className='relative flex lg:flex-row flex-col max-container h-[100vh] '> 
